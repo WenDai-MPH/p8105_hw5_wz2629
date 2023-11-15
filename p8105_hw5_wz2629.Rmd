@@ -9,6 +9,8 @@ output: github_document
 library(tidyverse)
 library(p8105.datasets)
 library(viridis)
+library(rvest)
+set.seed(123)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -99,5 +101,65 @@ test_results %>%
 
 This figure suggests a very wide range in the rate at which homicides are solved -- Chicago is noticeably high and, given the narrowness of the CI, likely is the location of many homicides. 
 
+# Problem 2
 
+Part I: Create a tidy data frame containing data from all participants, including the subject ID, arm, and observations over time:
+
+* step 1: Use list.files function to create a dataframe that containing all file names
+
+* step 2: Iterate over file names and read in data for each subject using purrr::map and saving the result as a new variable in the dataframe. 
+
+* Step 3: I tidied the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
+
+```{r}
+names=list.files(path = "data", full.names = TRUE) 
+data1=sub(".csv","",names)
+
+load_df=function(path)
+{
+  df= read_csv(path) |> 
+  janitor::clean_names() 
+}
+
+
+list_path=
+  list(
+a="data/con_01.csv",
+b="data/con_02.csv",
+c="data/con_03.csv", 
+d="data/con_04.csv",
+e="data/con_05.csv",
+f="data/con_06.csv",
+g="data/con_07.csv",
+h="data/con_08.csv",
+i="data/con_09.csv",
+g="data/con_10.csv",
+k="data/exp_01.csv",
+l="data/exp_02.csv",
+m="data/exp_03.csv", 
+n="data/exp_04.csv",
+o="data/exp_05.csv",
+p="data/exp_06.csv",
+q="data/exp_07.csv",
+r="data/exp_08.csv",
+s="data/exp_09.csv",
+t="data/exp_10.csv"
+  )
+
+
+tidy_df=data.frame(name =data1) |> 
+ separate(col =name, into = c("path", "observation1"), sep = "/", remove = FALSE) |> 
+  mutate(subject=observation1) |> 
+  separate(col =observation1, into=c("group","b"), sep = "_", remove = FALSE) |> 
+  select(subject,group) |> 
+  mutate(table=map(list_path,load_df)) |>
+  unnest(table)
+
+final_tidy_df=tidy_df |>  pivot_longer(week_1:week_8,
+               names_to="week",
+               names_prefix = "week_",
+               values_to = "result") 
+
+final_tidy_df|> knitr::kable(digits = 3)
+```
 
