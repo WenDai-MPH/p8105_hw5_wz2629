@@ -216,3 +216,16 @@ normal_df_zero=
 normal_df_zero 
 ```
 
+* Step 2: 
+Repeat the above for μ={1,2,3,4,5,6}
+
+```{r}
+normal_df=expand_grid(
+    mean_size=c(0,1,2,3,4,5,6),
+    iter=1:5000,
+  )|> 
+  mutate(estimate_df=map(mean_size,t_test)) |> unnest(estimate_df)|> select(mean_size,estimate,p.value) 
+
+normal_df
+```
+
