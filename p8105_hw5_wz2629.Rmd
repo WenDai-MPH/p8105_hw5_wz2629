@@ -163,3 +163,24 @@ final_tidy_df=tidy_df |>  pivot_longer(week_1:week_8,
 final_tidy_df|> knitr::kable(digits = 3)
 ```
 
+Part II: Make a spaghetti plot showing observations on each subject over time, and comment on differences between groups.
+
+* Step 1: Make a spaghetti plot showing observations on each subject over time
+
+* Step 2: comment on differences between groups
+
+```{r}
+
+
+ggplot(final_tidy_df, aes(x = week, y =result, group =subject , color = group)) +
+  geom_line() +facet_grid(~group)+
+  labs(title = "Spaghetti Plot of observations on each subject over time",
+       x = "Week",
+       y = "Result on each subject") 
+
+```
+
+### Comment: 
+The spaghetti plot provides a comparative visual representation of the trajectories between 'con' (control) and 'exp' (experimental) groups across an eight-week span. The control group's pattern remains relatively unchanged throughout the period, with observation values fluctuating around a constant mean, indicating a stable condition without significant internal variations. In contrast, the experimental group reveals a progressive increase in observation values, indicating a clear trend. This upward trajectory becomes particularly evident after the fourth week, marking a divergence from the control group. The variability within the experimental group also increases over time, suggesting individual differences in response to the experimental conditions. By the final week, the experimental group's observation values are notably higher than those of the control group, suggesting that the experimental conditions may have had a systematic effect on the measured outcomes.
+
+
