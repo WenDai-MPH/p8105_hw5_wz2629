@@ -229,5 +229,26 @@ normal_df=expand_grid(
 normal_df
 ```
 
+Part II: LET'S PLOT!
 
+* Step 1: Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of μ on the x axis. Describe the association between effect size and power.
+
+```{r}
+power_df =normal_df |> 
+  mutate(rejected = ifelse(p.value < 0.05, 1, 0)) |> 
+  group_by(mean_size) |> 
+  summarise(power = mean(rejected))
+
+
+ggplot(power_df, aes(mean_size, y=power)) +
+  geom_path() +
+  theme_minimal() +
+  labs(title='Power vs. True Value of μ',
+       x='True Value of μ',
+       y='Power (Proportion of Null Rejected)')
+```
+
+### Comment: 
+This Plot elucidates a positively correlated, non-linear relationship between effect size and statistical power.
+Initially, with the true mean (μ) near the null hypothesis (possibly zero here), the test's power is low due to the small effect size blending with random variation. As the effect size grows, power rapidly increases, signifying a higher likelihood of detecting the true effect. After reaching a certain point, further increases in effect size have minimal impact on power, as it nears its maximum capacity.
 
